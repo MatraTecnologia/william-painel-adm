@@ -3,11 +3,15 @@
 interface LoginPreviewProps {
   systemName: string;
   systemTitle: string;
+  systemDescription?: string;
   logoUrl?: string;
   primaryColor: string;
   secondaryColor: string;
   gradientDirection: number;
   elements: { id: string; visible: boolean }[];
+  loginBgColor?: string;
+  loginBgImage?: string;
+  loginTextColor?: string;
 }
 
 export function LoginPreview({
@@ -18,8 +22,27 @@ export function LoginPreview({
   secondaryColor,
   gradientDirection,
   elements,
+  loginBgColor,
+  loginBgImage,
+  loginTextColor,
+  systemDescription,
 }: LoginPreviewProps) {
-  const bgGradient = `linear-gradient(${gradientDirection}deg, ${primaryColor}15 0%, transparent 50%, ${secondaryColor}15 100%)`;
+  const textColor = loginTextColor || "#0f172a"; // slate-900 default
+  const subtextColor = loginTextColor
+    ? `${loginTextColor}99`
+    : "#64748b"; // slate-500 default
+  // Build background: loginBgColor takes priority, then loginBgImage, then gradient
+  const defaultGradient = `linear-gradient(${gradientDirection}deg, ${primaryColor}15 0%, transparent 50%, ${secondaryColor}15 100%)`;
+  const bgStyle: React.CSSProperties = {};
+  if (loginBgImage) {
+    bgStyle.backgroundImage = `url(${loginBgImage})`;
+    bgStyle.backgroundSize = "cover";
+    bgStyle.backgroundPosition = "center";
+  } else if (loginBgColor) {
+    bgStyle.backgroundColor = loginBgColor;
+  } else {
+    bgStyle.background = defaultGradient;
+  }
 
   function renderElement(id: string) {
     switch (id) {
@@ -58,14 +81,29 @@ export function LoginPreview({
         );
       case "title":
         return (
-          <h1 className="text-3xl font-bold text-balance text-center text-slate-900 mb-3">
+          <h1
+            className="text-3xl font-bold text-balance text-center mb-3"
+            style={{ color: textColor }}
+          >
             {systemName || "Nome do Sistema"}
           </h1>
         );
       case "subtitle":
         return (
-          <p className="text-pretty text-slate-500 text-lg text-center">
+          <p
+            className="text-pretty text-lg text-center"
+            style={{ color: subtextColor }}
+          >
             {systemTitle || "Subtitulo do sistema"}
+          </p>
+        );
+      case "description":
+        return (
+          <p
+            className="text-pretty text-sm text-center mt-2"
+            style={{ color: subtextColor }}
+          >
+            {systemDescription || "Descricao do sistema"}
           </p>
         );
       default:
@@ -105,7 +143,7 @@ export function LoginPreview({
             <div
               className="flex items-center justify-center p-4"
               style={{
-                background: bgGradient,
+                ...bgStyle,
                 minHeight: "1054px",
               }}
             >

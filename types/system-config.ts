@@ -11,6 +11,9 @@ export interface SystemConfig {
   faviconUrl?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  loginBgColor?: string;
+  loginBgImage?: string;
+  loginTextColor?: string;
   contactEmail?: string;
   supportUrl?: string;
   websiteUrl?: string;
@@ -39,6 +42,9 @@ export interface SystemConfigUpdate {
   faviconUrl?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  loginBgColor?: string;
+  loginBgImage?: string;
+  loginTextColor?: string;
   contactEmail?: string;
   supportUrl?: string;
   websiteUrl?: string;
@@ -54,7 +60,7 @@ export interface SystemConfigUpdate {
 }
 
 export interface FileUploadData {
-  type: "logoUrl" | "logoUrlDark" | "faviconUrl";
+  type: "logoUrl" | "logoUrlDark" | "faviconUrl" | "loginBgImage";
   base64: string;
   filename?: string;
 }

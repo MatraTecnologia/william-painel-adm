@@ -81,6 +81,7 @@ export default function PersonalizationPage() {
     { id: "logo", label: "Logo", visible: true },
     { id: "title", label: "Nome do Sistema", visible: true },
     { id: "subtitle", label: "Subtitulo", visible: true },
+    { id: "description", label: "Descricao", visible: false },
   ]);
   const [gradientDirection, setGradientDirection] = useState(135);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -99,6 +100,9 @@ export default function PersonalizationPage() {
         faviconUrl: config.faviconUrl || "",
         primaryColor: config.primaryColor || "#6366f1",
         secondaryColor: config.secondaryColor || "#8b5cf6",
+        loginBgColor: config.loginBgColor || "",
+        loginBgImage: config.loginBgImage || "",
+        loginTextColor: config.loginTextColor || "",
         contactEmail: config.contactEmail || "",
         supportUrl: config.supportUrl || "",
         websiteUrl: config.websiteUrl || "",
@@ -186,6 +190,9 @@ export default function PersonalizationPage() {
         faviconUrl: config.faviconUrl || "",
         primaryColor: config.primaryColor || "#6366f1",
         secondaryColor: config.secondaryColor || "#8b5cf6",
+        loginBgColor: config.loginBgColor || "",
+        loginBgImage: config.loginBgImage || "",
+        loginTextColor: config.loginTextColor || "",
         contactEmail: config.contactEmail || "",
         supportUrl: config.supportUrl || "",
         websiteUrl: config.websiteUrl || "",
@@ -204,6 +211,7 @@ export default function PersonalizationPage() {
         { id: "logo", label: "Logo", visible: true },
         { id: "title", label: "Nome do Sistema", visible: true },
         { id: "subtitle", label: "Subtitulo", visible: true },
+        { id: "description", label: "Descricao", visible: false },
       ]);
       setGradientDirection(135);
     }
@@ -439,6 +447,125 @@ export default function PersonalizationPage() {
                       background: `linear-gradient(${gradientDirection}deg, ${form.primaryColor || "#6366f1"}, ${form.secondaryColor || "#8b5cf6"})`,
                     }}
                   />
+
+                  <Separator />
+
+                  {/* Text color */}
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Cor do Texto</Label>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="color"
+                        value={form.loginTextColor || "#0f172a"}
+                        onChange={(e) =>
+                          updateField("loginTextColor", e.target.value)
+                        }
+                        className="h-9 w-10 cursor-pointer rounded border p-0.5"
+                      />
+                      <Input
+                        value={form.loginTextColor || ""}
+                        onChange={(e) =>
+                          updateField("loginTextColor", e.target.value)
+                        }
+                        placeholder="Vazio = cor padrao do tema"
+                        className="h-9 text-xs flex-1"
+                      />
+                      {form.loginTextColor && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-9 px-2"
+                          onClick={() => updateField("loginTextColor", "")}
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Fundo do Login */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <ImageIcon className="h-4 w-4" />
+                    Fundo da Pagina de Login
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Cor ou imagem de fundo. Se ambos estiverem vazios, usa o gradiente.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Cor de Fundo</Label>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="color"
+                        value={form.loginBgColor || "#ffffff"}
+                        onChange={(e) =>
+                          updateField("loginBgColor", e.target.value)
+                        }
+                        className="h-9 w-10 cursor-pointer rounded border p-0.5"
+                      />
+                      <Input
+                        value={form.loginBgColor || ""}
+                        onChange={(e) =>
+                          updateField("loginBgColor", e.target.value)
+                        }
+                        placeholder="Vazio = usa gradiente"
+                        className="h-9 text-xs flex-1"
+                      />
+                      {form.loginBgColor && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-9 px-2"
+                          onClick={() => updateField("loginBgColor", "")}
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Imagem de Fundo (URL)</Label>
+                    <Input
+                      value={form.loginBgImage || ""}
+                      onChange={(e) =>
+                        updateField("loginBgImage", e.target.value)
+                      }
+                      placeholder="https://exemplo.com/bg.jpg"
+                      className="h-9 text-xs"
+                    />
+                    {form.loginBgImage && (
+                      <div className="relative rounded-md border overflow-hidden h-20">
+                        <img
+                          src={form.loginBgImage}
+                          alt="Preview fundo"
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-1 right-1 h-6 px-1.5 text-[10px]"
+                          onClick={() => updateField("loginBgImage", "")}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    )}
+                    <ImageUploadField
+                      label="Ou envie uma imagem"
+                      currentValue=""
+                      pendingPreview={getPendingPreview("loginBgImage")}
+                      onFileSelect={(file) =>
+                        handleFileSelect("loginBgImage", file)
+                      }
+                      onRemove={() => handleImageRemove("loginBgImage")}
+                      onUrlChange={() => {}}
+                    />
+                  </div>
                 </CardContent>
               </Card>
 
@@ -541,11 +668,19 @@ export default function PersonalizationPage() {
               <LoginPreview
                 systemName={form.systemName || ""}
                 systemTitle={form.systemTitle || ""}
+                systemDescription={form.systemDescription || ""}
                 logoUrl={previewLogoUrl}
                 primaryColor={form.primaryColor || "#6366f1"}
                 secondaryColor={form.secondaryColor || "#8b5cf6"}
                 gradientDirection={gradientDirection}
                 elements={elements}
+                loginBgColor={form.loginBgColor || ""}
+                loginBgImage={
+                  getPendingPreview("loginBgImage") ||
+                  form.loginBgImage ||
+                  ""
+                }
+                loginTextColor={form.loginTextColor || ""}
               />
               <p className="text-[10px] text-muted-foreground text-center max-w-[300px]">
                 As alteracoes de cores, textos e logos serao aplicadas na tela de
